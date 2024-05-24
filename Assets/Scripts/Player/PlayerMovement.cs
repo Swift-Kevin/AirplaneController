@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 force = (Camera.main.transform.forward * inp.y * forceAmnt) + (Camera.main.transform.right * inp.x * forceAmnt);
         rb.AddForce(force, ForceMode.Impulse);
+        rb.angularVelocity = Vector3.zero;
 
         ToggleVisuals();
     }

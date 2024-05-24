@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +12,11 @@ public class GameManager : MonoBehaviour
     public void QuitApp()
     {
         Application.Quit();
+    }
+
+    private void Start()
+    {
+        MouseLockHide();
     }
 
     private void Awake()
@@ -34,6 +40,10 @@ public class GameManager : MonoBehaviour
     {
         MouseUnlockShow(); // show cursor and unlock it from center
         UIManager.Instance.SetIsInGame(false); // disable turning on pause menu
-        UIManager.Instance.DisplayMultiplayerMenu(); 
+    }
+
+    public void GameOver()
+    {
+
     }
 }

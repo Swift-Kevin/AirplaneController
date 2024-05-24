@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using UnityEditor.Build;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
-public class BoidSwarm : MonoBehaviour
+public class BoidSwarm : MonoBehaviour, IDamageable
 {
     internal struct Taskforce
     {
@@ -10,27 +12,30 @@ public class BoidSwarm : MonoBehaviour
         public GameObject boidObj;
     }
 
-    [SerializeField, Range(0f,5f)] private float alignStrength;
-    [SerializeField, Range(0f,5f)] private float cohesionStrength;
-    [SerializeField, Range(0f,5f)] private float separationStrength;
-    
+    [SerializeField, Range(0f, 5f)] private float alignStrength;
+    [SerializeField, Range(0f, 5f)] private float cohesionStrength;
+    [SerializeField, Range(0f, 5f)] private float separationStrength;
+
     [Seperator]
     [SerializeField] private float boidRadius = 50f;
     [SerializeField] private float maxBoidSpeed = 100f;
-    [SerializeField, Min(0)] private int spawnAmount; 
-    [SerializeField] private GameObject boidPrefab; 
+    [SerializeField, Min(0)] private int spawnAmount;
+    [SerializeField] private GameObject boidPrefab;
+
+    [Seperator]
+    [SerializeField] private SphereCollider coll;
 
     private List<Taskforce> Boids = new List<Taskforce>();
     private Vector3 avgPos, avgFwd;
 
     void Start()
     {
-        for (int i = 0; i < spawnAmount;  ++i)
+        for (int i = 0; i < spawnAmount; ++i)
         {
-            GameObject go = Instantiate(boidPrefab);
-            go.transform.position = Random.insideUnitSphere;
+            GameObject go = Instantiate(boidPrefab, transform.position, Quaternion.identity);
+            go.transform.position = Random.insideUnitSphere + transform.position;
             Taskforce task;
-            
+
             task.boidScript = go.GetComponent<Boid>();
             task.boidObj = go;
             task.boidScript.Startup(maxBoidSpeed, boidRadius);
@@ -39,9 +44,10 @@ public class BoidSwarm : MonoBehaviour
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
         CalculateAverages();
+        float longestRadius = 0.0f;
 
         foreach (var boid in Boids)
         {
@@ -58,8 +64,16 @@ public class BoidSwarm : MonoBehaviour
             }
 
             boid.boidScript.UpdateStatus();
+
+            float currRadius = Vector3.Distance(boid.boidScript.Position, avgPos);
+
+            if (currRadius > longestRadius)
+                longestRadius = currRadius;
+
         }
-        return;
+
+        coll.radius = longestRadius;
+        transform.position = avgPos;
     }
 
     private void CalculateAverages()
@@ -79,6 +93,8 @@ public class BoidSwarm : MonoBehaviour
         // Get Avg
         avgFwd /= _bC;
         avgPos /= _bC;
+
+        avgPos = Vector3.ClampMagnitude(avgPos, 250);
 
         return;
     }
@@ -130,5 +146,37 @@ public class BoidSwarm : MonoBehaviour
             newVec.Normalize();
 
         return newVec * separationStrength;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(avgPos, coll.radius);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        Taskforce task = Boids[Boids.Count - 1];
+        task.boidScript = null;
+        task.boidObj.SetActive(false);
+        Boids[Boids.Count - 1] = task;
+        Boids.Remove(Boids[Boids.Count - 1]);
+
+        if (Boids.Count <= 0)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            task = Boids[Boids.Count - 1];
+            task.boidScript = null;
+            task.boidObj.SetActive(false);
+            Boids[Boids.Count - 1] = task;
+            Boids.Remove(Boids[Boids.Count - 1]);
+
+            if (Boids.Count <= 0)
+            {
+                gameObject.SetActive(false);
+            }
+        }
     }
 }

@@ -54,6 +54,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""43011770-38d5-49c2-a2e5-6af77d269459"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -177,6 +186,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""ZRoll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""01a81b0d-f30c-44f5-9f93-a7a74335a6c6"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -216,6 +236,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_General_Movement = m_General.FindAction("Movement", throwIfNotFound: true);
         m_General_Looking = m_General.FindAction("Looking", throwIfNotFound: true);
         m_General_ZRoll = m_General.FindAction("ZRoll", throwIfNotFound: true);
+        m_General_Shoot = m_General.FindAction("Shoot", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_PauseToggle = m_UI.FindAction("PauseToggle", throwIfNotFound: true);
@@ -289,6 +310,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_General_Movement;
     private readonly InputAction m_General_Looking;
     private readonly InputAction m_General_ZRoll;
+    private readonly InputAction m_General_Shoot;
     public struct GeneralActions
     {
         private @PlayerInputs m_Wrapper;
@@ -296,6 +318,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_General_Movement;
         public InputAction @Looking => m_Wrapper.m_General_Looking;
         public InputAction @ZRoll => m_Wrapper.m_General_ZRoll;
+        public InputAction @Shoot => m_Wrapper.m_General_Shoot;
         public InputActionMap Get() { return m_Wrapper.m_General; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -314,6 +337,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @ZRoll.started += instance.OnZRoll;
             @ZRoll.performed += instance.OnZRoll;
             @ZRoll.canceled += instance.OnZRoll;
+            @Shoot.started += instance.OnShoot;
+            @Shoot.performed += instance.OnShoot;
+            @Shoot.canceled += instance.OnShoot;
         }
 
         private void UnregisterCallbacks(IGeneralActions instance)
@@ -327,6 +353,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @ZRoll.started -= instance.OnZRoll;
             @ZRoll.performed -= instance.OnZRoll;
             @ZRoll.canceled -= instance.OnZRoll;
+            @Shoot.started -= instance.OnShoot;
+            @Shoot.performed -= instance.OnShoot;
+            @Shoot.canceled -= instance.OnShoot;
         }
 
         public void RemoveCallbacks(IGeneralActions instance)
@@ -395,6 +424,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnLooking(InputAction.CallbackContext context);
         void OnZRoll(InputAction.CallbackContext context);
+        void OnShoot(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

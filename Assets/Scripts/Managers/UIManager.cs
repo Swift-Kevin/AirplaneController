@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
     [Seperator]
     [SerializeField] private GameObject objPauseUI;
     [SerializeField] private GameObject objPlayerUI;
-    [SerializeField] private GameObject objOptionsUI;
+    [SerializeField] private GameObject objMainMenuUI;
     
     public bool isInGame = false;
     public bool isPauseOpened = false;
@@ -36,18 +36,13 @@ public class UIManager : MonoBehaviour
     {
         objPauseUI.SetActive(false);
         objPlayerUI.SetActive(false);
-        objOptionsUI.SetActive(false);
+        objMainMenuUI.SetActive(false);
     }
 
     public void SetIsInGame(bool _status)
     {
         isInGame = _status;
         DisplayPlayerUI();
-    }
-
-    public void DisplayMultiplayerMenu()
-    {
-        HideAllMenus();
     }
 
     private void DisplayPauseMenu()
@@ -81,9 +76,9 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void DisplayOptionsMenu()
+    public void DisplayMainMenu()
     {
         HideAllMenus();
-        objOptionsUI.SetActive(true);
+        objMainMenuUI.SetActive(true);
     }
 }

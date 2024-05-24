@@ -17,6 +17,8 @@ public class Boid : MonoBehaviour
             Velocity = Vector3.Normalize(Velocity);
             Velocity *= maxSpeed;
         }
+
+        transform.rotation = Quaternion.LookRotation(Velocity);
         Position += Velocity * Time.deltaTime;
     }
 
