@@ -14,27 +14,9 @@ public class PlanetSpawner : MonoBehaviour
         for (int i = 0; i < spawnAmt; ++i)
         {
             Vector3 point = Random.insideUnitSphere * spawnZoneRadius;
-
-///            bool con1 = point.x >= -safeZoneRange && point.x <= safeZoneRange;
-///            bool con2 = point.y >= -safeZoneRange && point.y <= safeZoneRange;
-///            bool con3 = point.z >= -safeZoneRange && point.z <= safeZoneRange;
-///
-            //if (con1)
-            //{
-            //    point.x += 50;
-            //}
-            //else if (con2)
-            //{
-            //    point.y += 50;
-            //}
-            //else if (con3)
-            //{
-            //    point.z += 50;
-            //}
-
             GameObject go = Instantiate(m_Prefab, point, Random.rotation);
 
-            float rndS = Random.Range(0.5f, 200f);
+            float rndS = Random.Range(10f, 200f);
             Vector3 scale = new Vector3(rndS, rndS, rndS);
             go.transform.localScale = scale;
 

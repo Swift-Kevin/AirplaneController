@@ -3,9 +3,11 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     [SerializeField] private float waitToDestroyTime = 3f;
+    [SerializeField] private AudioSource audSource;
 
     private void Start()
     {
+        audSource.Play();
         Destroy(gameObject, waitToDestroyTime);
     }
 

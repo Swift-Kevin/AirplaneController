@@ -13,30 +13,43 @@ public class SwarmManager : MonoBehaviour
 
     [SerializeField] private GameObject swarmPrefab;
     [SerializeField] private List<GameObject> swarms;
-    [Seperator]
-    [SerializeField, Min(0)] private float spawnRange;
-    [SerializeField] private float swarmAmounts;
+    [SerializeField] private Vector2 swarmRange;
 
     private bool hasStarted = false;
+    private float spawnRange = 200f;
+    private int swarmAmounts;
+    private int currSwarmCount = 0;
 
     public void StartSwarm()
     {
+        swarmAmounts = Random.Range((int)swarmRange.x, (int)swarmRange.y);
+        currSwarmCount = swarmAmounts;
+
         for (int i = 0; i < swarmAmounts; i++)
         {
             GameObject go = Instantiate(swarmPrefab);
-            go.transform.position = Random.insideUnitSphere * Random.Range(0, spawnRange);
+            go.transform.position = Random.insideUnitSphere * Random.Range(50, spawnRange);
 
             swarms.Add(go);
         }
 
+        UIManager.Instance.PlayerUI.UpdateRemainingEnemies(swarms.Count);
         hasStarted = true;
     }
 
     private void Update()
     {
-        if (swarms.Count <= 0 && hasStarted)
+        if (currSwarmCount <= 0 && hasStarted)
         {
             GameManager.Instance.GameWon();
+            swarms.Clear();
+            hasStarted = false;
         }
+    }
+
+    public void DecreaseSwarmCount()
+    {
+        currSwarmCount--;
+        UIManager.Instance.PlayerUI.UpdateRemainingEnemies(currSwarmCount);
     }
 }

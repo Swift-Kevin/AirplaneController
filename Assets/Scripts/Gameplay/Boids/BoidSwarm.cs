@@ -95,12 +95,11 @@ public class BoidSwarm : MonoBehaviour, IDamageable
         avgPos /= _bC;
 
 
-        avgPos = Vector3.ClampMagnitude(avgPos, 500);
+        avgPos = Vector3.ClampMagnitude(avgPos, 300);
         if (Vector3.Distance(avgPos, GameManager.Instance.PlayerPos) < distanceToAttackPlayer)
         {
             Vector3 dirToPlayer = GameManager.Instance.PlayerPos - avgFwd;
             avgFwd = Vector3.Lerp(avgFwd, dirToPlayer, Time.deltaTime);
-            Debug.DrawRay(avgPos, avgFwd, Color.magenta);
         }
 
         return;
@@ -155,12 +154,6 @@ public class BoidSwarm : MonoBehaviour, IDamageable
         return newVec * separationStrength;
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(avgPos, coll.radius);
-        Gizmos.DrawWireSphere(Vector3.zero, 500);
-    }
-
     public void TakeDamage()
     {
         Taskforce task = Boids[Boids.Count - 1];
@@ -171,6 +164,8 @@ public class BoidSwarm : MonoBehaviour, IDamageable
 
         if (Boids.Count <= 0)
         {
+            // Double check for an odd number of boids
+            SwarmManager.Instance.DecreaseSwarmCount();
             gameObject.SetActive(false);
         }
         else
@@ -183,6 +178,7 @@ public class BoidSwarm : MonoBehaviour, IDamageable
 
             if (Boids.Count <= 0)
             {
+                SwarmManager.Instance.DecreaseSwarmCount();
                 gameObject.SetActive(false);
             }
 
@@ -197,7 +193,6 @@ public class BoidSwarm : MonoBehaviour, IDamageable
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("yoo");
             IDamageable damageable = other.GetComponent<IDamageable>();
 
             if (damageable != null)

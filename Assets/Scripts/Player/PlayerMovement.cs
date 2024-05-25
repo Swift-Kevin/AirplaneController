@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (UIManager.Instance.isInGame)
+        if (UIManager.Instance.isInGame && playerBaseScript.IsAlive)
         {
             Vector3 force = (Camera.main.transform.forward * inp.y * forceAmnt) + (Camera.main.transform.right * inp.x * forceAmnt);
             rb.AddForce(force, ForceMode.Impulse);

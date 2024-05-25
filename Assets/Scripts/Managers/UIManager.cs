@@ -11,19 +11,18 @@ public class UIManager : MonoBehaviour
 
     [Seperator]
     [SerializeField] private GameObject objPauseUI;
-    [SerializeField] private Animator pauseAnimator;
-    
-    [Seperator]
     [SerializeField] private GameObject objPlayerUI;
-    
-    [Seperator]
     [SerializeField] private GameObject objMainMenuUI;
+
+    [Seperator]
+    [SerializeField] private Animator pauseAnimator;
     [SerializeField] private Animator mainmenuAnimator;
 
     [Seperator]
-    [SerializeField] private PlayerUI energyUIScript;
+    [SerializeField] private PlayerUI playerUIScript;
+    [SerializeField] private GameEndedUI gameEndedUI;
 
-    public PlayerUI PlayerUI => energyUIScript;
+    public PlayerUI PlayerUI => playerUIScript;
 
     public bool isInGame = false;
     public bool isPauseOpened = false;
@@ -50,6 +49,7 @@ public class UIManager : MonoBehaviour
         objPauseUI.SetActive(false);
         objPlayerUI.SetActive(false);
         objMainMenuUI.SetActive(false);
+        gameEndedUI.TurnOffUI();
     }
 
     public void SetIsInGame(bool _status)
@@ -73,6 +73,7 @@ public class UIManager : MonoBehaviour
         objPauseUI?.SetActive(true);
         GameManager.Instance.MouseUnlockShow();
         isPauseOpened = true;
+        InputManager.Instance.Actions.Disable();
     }
 
     public void DisplayPlayerUI()
@@ -90,7 +91,6 @@ public class UIManager : MonoBehaviour
         objMainMenuUI.SetActive(true);
         GameManager.Instance.MouseUnlockShow();
         SetIsInGame(false);
-        mainmenuAnimator.SetTrigger("MainMenuTrigger");
     }
 
     public void TogglePauseMenu()
@@ -111,14 +111,21 @@ public class UIManager : MonoBehaviour
     public void GameLostMenu()
     {
         HideAllMenus();
-
+        InputManager.Instance.Actions.Disable();
+        gameEndedUI.DisplayGameLost();
         SetIsInGame(false);
     }
 
     public void GameWonMenu()
     {
         HideAllMenus();
-
+        InputManager.Instance.Actions.Disable();
+        gameEndedUI.DisplayGameWon();
         SetIsInGame(false);
+    }
+
+    public void UpdateGameTimer()
+    {
+        
     }
 }

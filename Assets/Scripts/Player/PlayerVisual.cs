@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerVisual : MonoBehaviour
@@ -14,10 +15,15 @@ public class PlayerVisual : MonoBehaviour
     void Start()
     {
         // Turn all off
+        TurnAllOff();
+    }
+
+    public void TurnAllOff()
+    {
         particleBack.SetActive(false);
         particleFrontLeft.SetActive(false);
         particleFrontRight.SetActive(false);
-        particleBackLeft.SetActive(false);  
+        particleBackLeft.SetActive(false);
         particleBackRight.SetActive(false);
     }
 

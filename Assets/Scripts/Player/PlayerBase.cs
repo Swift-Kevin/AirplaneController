@@ -7,6 +7,8 @@ public class PlayerBase : MonoBehaviour, IDamageable
     [SerializeField] private HealthPool health;
     [SerializeField] private ParticleSystem hitParticles;
 
+    public bool IsAlive => health.IsValid;
+
     public void TakeDamage()
     {
         health.Decrease(Time.deltaTime);
@@ -24,5 +26,16 @@ public class PlayerBase : MonoBehaviour, IDamageable
     {
         health.SetMax();
         UIManager.Instance.PlayerUI.UpdateEnergyBar(health.Percent);
+        health.OnDepleted += Health_OnDepleted;
+    }
+
+    private void Health_OnDepleted()
+    {
+        GameManager.Instance.GameOver();
+    }
+
+    public void ResetStats()
+    {
+        health.SetMax();
     }
 }

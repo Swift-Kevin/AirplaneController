@@ -7,11 +7,14 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     [SerializeField] private SettingsSO settingsObj;
-    [SerializeField] private Transform playerObj;
+    [SerializeField] private PlayerBase playerScript;
+    [SerializeField] private CustomTimer gameTimer;
 
     public static float SafeZoneDistance = 300f;
     public SettingsSO SettingsObj => settingsObj;
-    public Vector3 PlayerPos => playerObj.position;
+    public Vector3 PlayerPos => playerScript.transform.position;
+
+    private float storedTimeScale;
 
     public void QuitApp()
     {
@@ -21,6 +24,14 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+    }
+
+    private void Start()
+    {
+        storedTimeScale = Time.timeScale;
+
+        gameTimer.OnEnd += GameOver;
+        gameTimer.OnTick += UIManager.Instance.UpdateGameTimer;
     }
 
     public void MouseUnlockShow()
@@ -37,20 +48,18 @@ public class GameManager : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
-        MouseUnlockShow(); // show cursor and unlock it from center
         UIManager.Instance.DisplayMainMenu();
+        AudioManager.Instance.PlayMainMenuMusic();
     }
 
     public void GameOver()
     {
-        // lost the game
         MouseUnlockShow();
         UIManager.Instance.GameLostMenu();
     }
 
     public void GameWon()
     {
-        // won the game
         MouseUnlockShow();
         UIManager.Instance.GameWonMenu();
     }
@@ -60,5 +69,9 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.DisplayPlayerUI();
         InputManager.Instance.Actions.Enable();
         SwarmManager.Instance.StartSwarm();
+        AudioManager.Instance.PlayBattleMusic();
+        playerScript.ResetStats();
+
+        gameTimer.StartTimer();
     }
 }
