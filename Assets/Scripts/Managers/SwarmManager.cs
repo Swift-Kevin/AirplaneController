@@ -28,7 +28,12 @@ public class SwarmManager : MonoBehaviour
         for (int i = 0; i < swarmAmounts; i++)
         {
             GameObject go = Instantiate(swarmPrefab);
-            go.transform.position = Random.insideUnitSphere * Random.Range(50, spawnRange);
+            go.transform.position = Random.insideUnitSphere * Random.Range(100f, spawnRange);
+            
+            BoidSwarm script = go.GetComponent<BoidSwarm>();
+            script.cohesionStrength = Random.Range(2.25f, 2.75f);
+            script.alignStrength = Random.Range(0f, 0.25f);
+            script.separationStrength = Random.Range(4.5f, 5f);
 
             swarms.Add(go);
         }
@@ -42,6 +47,12 @@ public class SwarmManager : MonoBehaviour
         if (currSwarmCount <= 0 && hasStarted)
         {
             GameManager.Instance.GameWon();
+
+            foreach (GameObject go in swarms)
+            {
+                Destroy(go);
+            }
+
             swarms.Clear();
             hasStarted = false;
         }
@@ -51,5 +62,13 @@ public class SwarmManager : MonoBehaviour
     {
         currSwarmCount--;
         UIManager.Instance.PlayerUI.UpdateRemainingEnemies(currSwarmCount);
+    }
+
+    public void ToggleSwarm(bool _status)
+    {
+        foreach (GameObject go in swarms)
+        {
+            go.SetActive(_status);
+        }
     }
 }

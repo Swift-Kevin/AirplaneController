@@ -31,8 +31,8 @@ public class PlayerUI : MonoBehaviour
         remainingEnemies.text = count.ToString();
     }
 
-    public void UpdateRemainingTime(float time)
+    public void UpdateRemainingTime(int time)
     {
-        remainingTime.text = time.ToString();
+        remainingTime.text = time.ToString() + "s\n";
     }
 }

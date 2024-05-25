@@ -10,9 +10,9 @@ public class BoidSwarm : MonoBehaviour, IDamageable
         public GameObject boidObj;
     }
 
-    [SerializeField, Range(0f, 5f)] private float alignStrength;
-    [SerializeField, Range(0f, 5f)] private float cohesionStrength;
-    [SerializeField, Range(0f, 5f)] private float separationStrength;
+    [Range(0f, 5f)] public float alignStrength;
+    [Range(0f, 5f)] public float cohesionStrength;
+    [Range(0f, 5f)] public float separationStrength;
 
     [Seperator]
     [SerializeField] private float boidRadius = 50f;
@@ -47,33 +47,36 @@ public class BoidSwarm : MonoBehaviour, IDamageable
 
     void FixedUpdate()
     {
-        CalculateAverages();
-        float longestRadius = 0.0f;
-
-        foreach (var boid in Boids)
+        if (UIManager.Instance.isInGame)
         {
-            boid.boidScript.Velocity += (CalculateAlignmentAcceleration(boid.boidScript) +
-                CalculateCohesionAcceleration(boid.boidScript) +
-                CalculateSeparationAcceleration(boid.boidScript)) *
-                boid.boidScript.maxSpeed * Time.deltaTime;
+            CalculateAverages();
+            float longestRadius = 0.0f;
 
-            if (boid.boidScript.Velocity.magnitude > boid.boidScript.maxSpeed)
+            foreach (var boid in Boids)
             {
-                boid.boidScript.Velocity.Normalize();
-                boid.boidScript.Velocity *= boid.boidScript.maxSpeed;
+                boid.boidScript.Velocity += (CalculateAlignmentAcceleration(boid.boidScript) +
+                    CalculateCohesionAcceleration(boid.boidScript) +
+                    CalculateSeparationAcceleration(boid.boidScript)) *
+                    boid.boidScript.maxSpeed * Time.deltaTime;
+
+                if (boid.boidScript.Velocity.magnitude > boid.boidScript.maxSpeed)
+                {
+                    boid.boidScript.Velocity.Normalize();
+                    boid.boidScript.Velocity *= boid.boidScript.maxSpeed;
+                }
+
+                boid.boidScript.UpdateStatus();
+
+                float currRadius = Vector3.Distance(boid.boidScript.Position, avgPos);
+
+                if (currRadius > longestRadius)
+                    longestRadius = currRadius;
+
             }
 
-            boid.boidScript.UpdateStatus();
-
-            float currRadius = Vector3.Distance(boid.boidScript.Position, avgPos);
-
-            if (currRadius > longestRadius)
-                longestRadius = currRadius;
-
+            coll.radius = longestRadius + bufferRadius;
+            transform.position = avgPos;
         }
-
-        coll.radius = longestRadius + bufferRadius;
-        transform.position = avgPos;
     }
 
     private void CalculateAverages()
@@ -166,6 +169,12 @@ public class BoidSwarm : MonoBehaviour, IDamageable
         {
             // Double check for an odd number of boids
             SwarmManager.Instance.DecreaseSwarmCount();
+
+            foreach (var c in Boids)
+            {
+                Destroy(c.boidObj);
+            }
+
             gameObject.SetActive(false);
         }
         else
@@ -179,6 +188,12 @@ public class BoidSwarm : MonoBehaviour, IDamageable
             if (Boids.Count <= 0)
             {
                 SwarmManager.Instance.DecreaseSwarmCount();
+
+                foreach (var c in Boids)
+                {
+                    Destroy(c.boidObj);
+                }
+
                 gameObject.SetActive(false);
             }
 

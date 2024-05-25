@@ -13,7 +13,4 @@ MonoBehaviour:
   m_Name: Settings Object
   m_EditorClassIdentifier: 
   masterVol: 0
-  musicVol: 0
-  playerVol: 0
-  sfxVol: 0
-  mouseSensitivity: 0
+  mouseSensitivity: 17.13936

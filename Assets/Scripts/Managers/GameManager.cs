@@ -1,4 +1,5 @@
 using System;
+using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -31,7 +32,12 @@ public class GameManager : MonoBehaviour
         storedTimeScale = Time.timeScale;
 
         gameTimer.OnEnd += GameOver;
-        gameTimer.OnTick += UIManager.Instance.UpdateGameTimer;
+        gameTimer.OnTick += GameTimerTick;
+    }
+
+    private void GameTimerTick()
+    {
+        UIManager.Instance.UpdateGameTimer((int)gameTimer.RemainingTime);
     }
 
     public void MouseUnlockShow()
@@ -50,6 +56,7 @@ public class GameManager : MonoBehaviour
     {
         UIManager.Instance.DisplayMainMenu();
         AudioManager.Instance.PlayMainMenuMusic();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void GameOver()
@@ -73,5 +80,10 @@ public class GameManager : MonoBehaviour
         playerScript.ResetStats();
 
         gameTimer.StartTimer();
+    }
+
+    public void UpdateMouseSens(float sens)
+    {
+        settingsObj.mouseSensitivity = sens;
     }
 }

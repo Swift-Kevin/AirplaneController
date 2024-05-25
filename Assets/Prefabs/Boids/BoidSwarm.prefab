@@ -50,9 +50,10 @@ MonoBehaviour:
   cohesionStrength: 2.5
   separationStrength: 5
   boidRadius: 15
-  maxBoidSpeed: 50
+  maxBoidSpeed: 75
   bufferRadius: 3
   spawnAmount: 10
+  distanceToAttackPlayer: 25
   boidPrefab: {fileID: 2605030909911933088, guid: bd349b1d23a6c974ea8c9b8508c20c98,
     type: 3}
   hitParticles: {fileID: 3000392893991839592}

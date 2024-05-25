@@ -58,7 +58,6 @@ public class UIManager : MonoBehaviour
 
         if (_status)
         {
-            InputManager.Instance.Actions.Enable();
             DisplayPlayerUI();
         }
         else
@@ -72,8 +71,9 @@ public class UIManager : MonoBehaviour
         HideAllMenus();
         objPauseUI?.SetActive(true);
         GameManager.Instance.MouseUnlockShow();
-        isPauseOpened = true;
         InputManager.Instance.Actions.Disable();
+        isPauseOpened = true;
+        SwarmManager.Instance.ToggleSwarm(false);
     }
 
     public void DisplayPlayerUI()
@@ -81,6 +81,8 @@ public class UIManager : MonoBehaviour
         HideAllMenus();
         objPlayerUI?.SetActive(true);
         GameManager.Instance.MouseLockHide();
+        InputManager.Instance.Actions.Enable();
+        SwarmManager.Instance.ToggleSwarm(true);
         isPauseOpened = false;
         isInGame = true;
     }
@@ -124,8 +126,8 @@ public class UIManager : MonoBehaviour
         SetIsInGame(false);
     }
 
-    public void UpdateGameTimer()
+    public void UpdateGameTimer(int _remain)
     {
-        
+        playerUIScript.UpdateRemainingTime(_remain);
     }
 }

@@ -9,5 +9,6 @@ public class MainMenuUI : MonoBehaviour
     void Start()
     {
         playBtn.onClick.AddListener(GameManager.Instance.PlayGame);
+        quitBtn.onClick.AddListener(GameManager.Instance.QuitApp);
     }
 }

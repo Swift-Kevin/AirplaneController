@@ -11,14 +11,17 @@ public class PlayerBase : MonoBehaviour, IDamageable
 
     public void TakeDamage()
     {
-        health.Decrease(Time.deltaTime);
-
-        hitParticles.Play();
-        UIManager.Instance.PlayerUI.UpdateEnergyBar(health.Percent);
-
-        if (!health.IsValid)
+        if (UIManager.Instance.isInGame)
         {
-            GameManager.Instance.GameOver();
+            health.Decrease(Time.deltaTime * 2);
+
+            hitParticles.Play();
+            UIManager.Instance.PlayerUI.UpdateEnergyBar(health.Percent);
+
+            if (!health.IsValid)
+            {
+                GameManager.Instance.GameOver();
+            }
         }
     }
 
@@ -37,5 +40,6 @@ public class PlayerBase : MonoBehaviour, IDamageable
     public void ResetStats()
     {
         health.SetMax();
+        transform.position = Vector3.zero;
     }
 }

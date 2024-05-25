@@ -5,10 +5,10 @@ public class PlayerCamera : MonoBehaviour
 {
     [SerializeField] private Transform cameraPivot;
     [SerializeField] private Transform cameraObj;
-    [SerializeField] private float camSens;
 
-    Vector2 inp;
-    float inpZ => InputManager.Instance.ZRoll;
+    private Vector2 inp;
+    private float inpZ => InputManager.Instance.ZRoll;
+    private float camSens => GameManager.Instance.SettingsObj.mouseSensitivity;
 
     // pitch = x axis (inp.y)
     // yaw = y axis (inp.x)
@@ -16,18 +16,19 @@ public class PlayerCamera : MonoBehaviour
 
     float yaw, pitch, roll;
     Vector3 values;
+
     void Update()
     {
         if (UIManager.Instance.isInGame)
         {
             inp = InputManager.Instance.LookVec;
+            float sens = Mathf.Clamp(camSens, 0.1f, 100f);
 
-            Quaternion pitchDelta = Quaternion.AngleAxis(-inp.y * camSens * Time.deltaTime, Vector3.right);
-            Quaternion yawDelta = Quaternion.AngleAxis(inp.x * camSens * Time.deltaTime, Vector3.up);
-            Quaternion rollDelta = Quaternion.AngleAxis(inpZ * camSens * Time.deltaTime, Vector3.forward);
+            Quaternion pitchDelta = Quaternion.AngleAxis(-inp.y * sens * Time.deltaTime, Vector3.right);
+            Quaternion yawDelta = Quaternion.AngleAxis(inp.x * sens * Time.deltaTime, Vector3.up);
+            Quaternion rollDelta = Quaternion.AngleAxis(inpZ * sens * Time.deltaTime, Vector3.forward);
 
             var rotDelta = pitchDelta * yawDelta * rollDelta;
-
             transform.rotation *= rotDelta;
         }
     }

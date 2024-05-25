@@ -29,6 +29,10 @@ public class PlayerMovement : MonoBehaviour
 
             ToggleVisuals();
         }
+        else
+        {
+            visuals.TurnAllOff();
+        }
     }
 
     private void UpdateDistances()
