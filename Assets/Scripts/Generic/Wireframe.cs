@@ -15,8 +15,8 @@ public class Wireframe : MonoBehaviour
     {
         if (GameManager.Instance.PlayerScript.DistToDeath < 75f)
         {
-            renderedMat.SetColor("_WireColor", Color.Lerp(start, end, GameManager.Instance.PlayerScript.DistToDeath / 75f));
-            renderedMat.SetColor("_BaseColor", Color.Lerp(start, end, GameManager.Instance.PlayerScript.DistToDeath / 75f));
+            renderedMat.SetColor("_WireColor", Color.Lerp(end, start, GameManager.Instance.PlayerScript.DistToDeath / 75f));
+            renderedMat.SetColor("_BaseColor", Color.Lerp(end, start, GameManager.Instance.PlayerScript.DistToDeath / 75f));
         }
         else
         {
