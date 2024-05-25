@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private PlayerVisual visuals;
     [SerializeField] private float forceAmnt;
     [SerializeField] private PlayerBase playerBaseScript;
+    public float distToDeathZone;
 
     Vector2 inp;
     private int distanceFromCenter;
@@ -38,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
     private void UpdateDistances()
     {
         distanceFromCenter = (int)Vector3.Distance(transform.position, Vector3.zero);
-        float distToDeathZone = GameManager.SafeZoneDistance - distanceFromCenter;
+        distToDeathZone = GameManager.SafeZoneDistance - distanceFromCenter;
         
         if (distToDeathZone <= 0)
         {

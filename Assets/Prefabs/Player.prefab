@@ -30979,6 +30979,7 @@ MonoBehaviour:
     min: 0
     currentValue: 0
   hitParticles: {fileID: 3927706546329238264}
+  moveScript: {fileID: 5143930231907321589}
 --- !u!114 &541219439989331624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31009,6 +31010,7 @@ MonoBehaviour:
   visuals: {fileID: 6865738147351392751}
   forceAmnt: 1
   playerBaseScript: {fileID: 6895384735097458293}
+  distToDeathZone: 0
 --- !u!114 &6865738147351392751
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -6,8 +6,10 @@ public class PlayerBase : MonoBehaviour, IDamageable
     [Seperator]
     [SerializeField] private HealthPool health;
     [SerializeField] private ParticleSystem hitParticles;
+    [SerializeField] private PlayerMovement moveScript;
 
     public bool IsAlive => health.IsValid;
+    public float DistToDeath => moveScript.distToDeathZone;
 
     public void TakeDamage()
     {

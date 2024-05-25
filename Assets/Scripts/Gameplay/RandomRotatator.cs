@@ -22,6 +22,6 @@ public class RandomRotatator : MonoBehaviour
             oldRot = transform.rotation;
         }
 
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, destRot, Time.deltaTime * 5);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, destRot, Time.deltaTime * 1);
     }
 }

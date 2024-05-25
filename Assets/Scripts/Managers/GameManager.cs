@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
 
     public static float SafeZoneDistance = 300f;
     public SettingsSO SettingsObj => settingsObj;
+    public PlayerBase PlayerScript => playerScript;
     public Vector3 PlayerPos => playerScript.transform.position;
 
     private float storedTimeScale;
