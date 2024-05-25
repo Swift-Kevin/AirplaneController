@@ -20,6 +20,7 @@ public class PlayerBase : MonoBehaviour, IDamageable
 
             if (!health.IsValid)
             {
+                transform.position = Vector3.zero;
                 GameManager.Instance.GameOver();
             }
         }
@@ -40,6 +41,7 @@ public class PlayerBase : MonoBehaviour, IDamageable
     public void ResetStats()
     {
         health.SetMax();
+        UIManager.Instance.PlayerUI.UpdateEnergyBar(health.Percent);
         transform.position = Vector3.zero;
     }
 }

@@ -49,8 +49,9 @@ MonoBehaviour:
   alignStrength: 0
   cohesionStrength: 2.5
   separationStrength: 5
+  seekStrength: 2
   boidRadius: 15
-  maxBoidSpeed: 75
+  maxBoidSpeed: 50
   bufferRadius: 3
   spawnAmount: 10
   distanceToAttackPlayer: 25

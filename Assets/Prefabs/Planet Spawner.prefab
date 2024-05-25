@@ -48,7 +48,7 @@ MonoBehaviour:
     type: 3}
   safeZoneRange: 25
   spawnZoneRadius: 5000
-  spawnAmt: 10
+  spawnAmt: 25
   sphereMat:
   - {fileID: 2100000, guid: 3dde0af34f19e4f43aaf87f6ca412cd2, type: 2}
   - {fileID: 2100000, guid: aa5741023e2bbad4095bd510b8a42da6, type: 2}

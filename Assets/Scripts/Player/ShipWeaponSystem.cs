@@ -17,7 +17,7 @@ public class ShipWeaponSystem : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButton(0) && UIManager.Instance.isInGame)
+        if (Input.GetMouseButton(0) && !UIManager.Instance.isPauseOpened && UIManager.Instance.isInGame)
         {
             Shoot();
         }

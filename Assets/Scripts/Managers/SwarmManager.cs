@@ -12,33 +12,32 @@ public class SwarmManager : MonoBehaviour
     }
 
     [SerializeField] private GameObject swarmPrefab;
-    [SerializeField] private List<GameObject> swarms;
-    [SerializeField] private Vector2 swarmRange;
+    [SerializeField] private int swarmAmt;
+    public List<GameObject> swarms;
 
     private bool hasStarted = false;
     private float spawnRange = 200f;
-    private int swarmAmounts;
     private int currSwarmCount = 0;
 
     public void StartSwarm()
     {
-        swarmAmounts = Random.Range((int)swarmRange.x, (int)swarmRange.y);
-        currSwarmCount = swarmAmounts;
+        swarms.Clear();
+        currSwarmCount = swarmAmt;
 
-        for (int i = 0; i < swarmAmounts; i++)
+        for (int i = 0; i < swarmAmt; i++)
         {
             GameObject go = Instantiate(swarmPrefab);
             go.transform.position = Random.insideUnitSphere * Random.Range(100f, spawnRange);
             
             BoidSwarm script = go.GetComponent<BoidSwarm>();
+            script.alignStrength = Random.Range(1f, 1f);
             script.cohesionStrength = Random.Range(2.25f, 2.75f);
-            script.alignStrength = Random.Range(0f, 0.25f);
             script.separationStrength = Random.Range(4.5f, 5f);
 
             swarms.Add(go);
         }
 
-        UIManager.Instance.PlayerUI.UpdateRemainingEnemies(swarms.Count);
+        UIManager.Instance.PlayerUI.UpdateRemainingEnemies(swarmAmt);
         hasStarted = true;
     }
 

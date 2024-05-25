@@ -13,6 +13,7 @@ public class BoidSwarm : MonoBehaviour, IDamageable
     [Range(0f, 5f)] public float alignStrength;
     [Range(0f, 5f)] public float cohesionStrength;
     [Range(0f, 5f)] public float separationStrength;
+    [Range(0f, 5f)] public float seekStrength;
 
     [Seperator]
     [SerializeField] private float boidRadius = 50f;
@@ -28,6 +29,7 @@ public class BoidSwarm : MonoBehaviour, IDamageable
 
     private List<Taskforce> Boids = new List<Taskforce>();
     private Vector3 avgPos, avgFwd;
+    private bool isSeekingPlayer;
 
     void Start()
     {
@@ -56,7 +58,8 @@ public class BoidSwarm : MonoBehaviour, IDamageable
             {
                 boid.boidScript.Velocity += (CalculateAlignmentAcceleration(boid.boidScript) +
                     CalculateCohesionAcceleration(boid.boidScript) +
-                    CalculateSeparationAcceleration(boid.boidScript)) *
+                    CalculateSeparationAcceleration(boid.boidScript) +
+                    CalcuateSeeking(boid.boidScript)) *
                     boid.boidScript.maxSpeed * Time.deltaTime;
 
                 if (boid.boidScript.Velocity.magnitude > boid.boidScript.maxSpeed)
@@ -79,9 +82,26 @@ public class BoidSwarm : MonoBehaviour, IDamageable
         }
     }
 
+    private Vector3 CalcuateSeeking(Boid boidScript)
+    {
+        Vector3 _seeking = Vector3.zero;
+
+        if (isSeekingPlayer)
+        {
+            _seeking = GameManager.Instance.PlayerPos - transform.position;
+            _seeking = _seeking.normalized * seekStrength;
+        }
+
+        return _seeking;
+    }
+
     private void CalculateAverages()
     {
         int _bC = Boids.Count;
+        if (_bC <= 0)
+        {
+            return;
+        }
 
         avgPos = Vector3.zero;
         avgFwd = Vector3.zero;
@@ -98,12 +118,20 @@ public class BoidSwarm : MonoBehaviour, IDamageable
         avgPos /= _bC;
 
 
-        avgPos = Vector3.ClampMagnitude(avgPos, 300);
-        if (Vector3.Distance(avgPos, GameManager.Instance.PlayerPos) < distanceToAttackPlayer)
+        avgPos = Vector3.ClampMagnitude(avgPos, 250);
+        
+        if (Vector3.Distance(transform.position, GameManager.Instance.PlayerPos) < distanceToAttackPlayer)
         {
-            Vector3 dirToPlayer = GameManager.Instance.PlayerPos - avgFwd;
-            avgFwd = Vector3.Lerp(avgFwd, dirToPlayer, Time.deltaTime);
+            Vector3 dirToPlayer = GameManager.Instance.PlayerPos - transform.position;
+            avgFwd = dirToPlayer.normalized;
+            isSeekingPlayer = true;
         }
+        else
+        {
+            isSeekingPlayer = false;
+        }
+
+        Debug.DrawLine(avgPos, avgPos + avgFwd * 50, Color.cyan);
 
         return;
     }

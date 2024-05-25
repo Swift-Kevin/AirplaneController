@@ -98,9 +98,11 @@ public class UIManager : MonoBehaviour
     public void TogglePauseMenu()
     {
         if (!isInGame)
+        {
             return;
+        }
 
-        if (objPauseUI.activeSelf)
+        if (objPauseUI.activeInHierarchy)
         {
             DisplayPlayerUI();
         }

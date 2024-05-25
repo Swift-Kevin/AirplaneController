@@ -22,11 +22,10 @@ public class PlayerCamera : MonoBehaviour
         if (UIManager.Instance.isInGame)
         {
             inp = InputManager.Instance.LookVec;
-            float sens = Mathf.Clamp(camSens, 0.1f, 100f);
 
-            Quaternion pitchDelta = Quaternion.AngleAxis(-inp.y * sens * Time.deltaTime, Vector3.right);
-            Quaternion yawDelta = Quaternion.AngleAxis(inp.x * sens * Time.deltaTime, Vector3.up);
-            Quaternion rollDelta = Quaternion.AngleAxis(inpZ * sens * Time.deltaTime, Vector3.forward);
+            Quaternion pitchDelta = Quaternion.AngleAxis(-inp.y * camSens * Time.deltaTime, Vector3.right);
+            Quaternion yawDelta = Quaternion.AngleAxis(inp.x * camSens * Time.deltaTime, Vector3.up);
+            Quaternion rollDelta = Quaternion.AngleAxis(inpZ * camSens * Time.deltaTime, Vector3.forward);
 
             var rotDelta = pitchDelta * yawDelta * rollDelta;
             transform.rotation *= rotDelta;

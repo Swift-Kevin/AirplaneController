@@ -44,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
         {
             playerBaseScript.TakeDamage();
         }
-        else if (distToDeathZone <= 100f)
+        else if (distToDeathZone <= 75f)
         {
             UIManager.Instance.PlayerUI.ToggleDistanceWarning(true);
         }

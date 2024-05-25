@@ -5,8 +5,8 @@ using UnityEngine;
 public class BobEffect : MonoBehaviour
 {
     [Header("Values")]
-    [SerializeField, Range(0, 5)] float bobRate = 1;
-    [SerializeField, Range(0, 2)] float amplitude = 0.25f;
+    [SerializeField] float bobRate = 1;
+    [SerializeField] float amplitude = 0.25f;
     [SerializeField] private bool rotate = true;
 
     private Vector3 startingPos;

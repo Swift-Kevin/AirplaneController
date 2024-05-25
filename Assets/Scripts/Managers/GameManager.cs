@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -56,7 +58,18 @@ public class GameManager : MonoBehaviour
     {
         UIManager.Instance.DisplayMainMenu();
         AudioManager.Instance.PlayMainMenuMusic();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        var go = FindObjectsByType(typeof(GameObject), FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+        foreach (var obj in go)
+        {
+            if (obj.GameObject().CompareTag("Enemy"))
+            {
+                Destroy(obj);
+            }
+        }
+
+        SwarmManager.Instance.swarms = new List<GameObject>();
     }
 
     public void GameOver()
