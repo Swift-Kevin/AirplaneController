@@ -7,7 +7,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private PlayerVisual visuals;
     [SerializeField] private float forceAmnt;
+    [SerializeField] private PlayerBase playerBaseScript;
+
     Vector2 inp;
+    private int distanceFromCenter;
 
     private void Update()
     {
@@ -16,11 +19,37 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector3 force = (Camera.main.transform.forward * inp.y * forceAmnt) + (Camera.main.transform.right * inp.x * forceAmnt);
-        rb.AddForce(force, ForceMode.Impulse);
-        rb.angularVelocity = Vector3.zero;
+        if (UIManager.Instance.isInGame)
+        {
+            Vector3 force = (Camera.main.transform.forward * inp.y * forceAmnt) + (Camera.main.transform.right * inp.x * forceAmnt);
+            rb.AddForce(force, ForceMode.Impulse);
+            rb.angularVelocity = Vector3.zero;
 
-        ToggleVisuals();
+            UpdateDistances();
+
+            ToggleVisuals();
+        }
+    }
+
+    private void UpdateDistances()
+    {
+        distanceFromCenter = (int)Vector3.Distance(transform.position, Vector3.zero);
+        float distToDeathZone = GameManager.SafeZoneDistance - distanceFromCenter;
+        
+        if (distToDeathZone <= 0)
+        {
+            playerBaseScript.TakeDamage();
+        }
+        else if (distToDeathZone <= 100f)
+        {
+            UIManager.Instance.PlayerUI.ToggleDistanceWarning(true);
+        }
+        else
+        {
+            UIManager.Instance.PlayerUI.ToggleDistanceWarning(false);
+        }
+
+        UIManager.Instance.PlayerUI.UpdateDistanceText((int)distToDeathZone);
     }
 
     private void ToggleVisuals()
@@ -43,6 +72,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (inp.y > 0)
         {
+
             visuals.TurnOnBack();
         }
         else

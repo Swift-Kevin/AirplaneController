@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using UnityEditor.Build;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
 public class BoidSwarm : MonoBehaviour, IDamageable
@@ -19,10 +17,13 @@ public class BoidSwarm : MonoBehaviour, IDamageable
     [Seperator]
     [SerializeField] private float boidRadius = 50f;
     [SerializeField] private float maxBoidSpeed = 100f;
+    [SerializeField] private float bufferRadius = 3f;
     [SerializeField, Min(0)] private int spawnAmount;
-    [SerializeField] private GameObject boidPrefab;
+    [SerializeField, Min(0)] private float distanceToAttackPlayer;
 
     [Seperator]
+    [SerializeField] private GameObject boidPrefab;
+    [SerializeField] private ParticleSystem hitParticles;
     [SerializeField] private SphereCollider coll;
 
     private List<Taskforce> Boids = new List<Taskforce>();
@@ -51,11 +52,10 @@ public class BoidSwarm : MonoBehaviour, IDamageable
 
         foreach (var boid in Boids)
         {
-            boid.boidScript.Velocity += (CalculateAlignmentAcceleration(boid.boidScript) + // add Calc curr alignment accel
-                             CalculateCohesionAcceleration(boid.boidScript) +  // add Calc curr cohesion accel
-                             CalculateSeparationAcceleration(boid.boidScript)) * // add calc curr separation accel
-                             boid.boidScript.maxSpeed * // mult curr Max Speed
-                             Time.deltaTime; // mult curr deltaTime
+            boid.boidScript.Velocity += (CalculateAlignmentAcceleration(boid.boidScript) +
+                CalculateCohesionAcceleration(boid.boidScript) +
+                CalculateSeparationAcceleration(boid.boidScript)) *
+                boid.boidScript.maxSpeed * Time.deltaTime;
 
             if (boid.boidScript.Velocity.magnitude > boid.boidScript.maxSpeed)
             {
@@ -72,7 +72,7 @@ public class BoidSwarm : MonoBehaviour, IDamageable
 
         }
 
-        coll.radius = longestRadius;
+        coll.radius = longestRadius + bufferRadius;
         transform.position = avgPos;
     }
 
@@ -94,7 +94,14 @@ public class BoidSwarm : MonoBehaviour, IDamageable
         avgFwd /= _bC;
         avgPos /= _bC;
 
-        avgPos = Vector3.ClampMagnitude(avgPos, 250);
+
+        avgPos = Vector3.ClampMagnitude(avgPos, 500);
+        if (Vector3.Distance(avgPos, GameManager.Instance.PlayerPos) < distanceToAttackPlayer)
+        {
+            Vector3 dirToPlayer = GameManager.Instance.PlayerPos - avgFwd;
+            avgFwd = Vector3.Lerp(avgFwd, dirToPlayer, Time.deltaTime);
+            Debug.DrawRay(avgPos, avgFwd, Color.magenta);
+        }
 
         return;
     }
@@ -151,9 +158,10 @@ public class BoidSwarm : MonoBehaviour, IDamageable
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(avgPos, coll.radius);
+        Gizmos.DrawWireSphere(Vector3.zero, 500);
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage()
     {
         Taskforce task = Boids[Boids.Count - 1];
         task.boidScript = null;
@@ -176,6 +184,25 @@ public class BoidSwarm : MonoBehaviour, IDamageable
             if (Boids.Count <= 0)
             {
                 gameObject.SetActive(false);
+            }
+
+            var shape = hitParticles.shape;
+            shape.radius = coll.radius;
+
+            hitParticles.Play();
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("yoo");
+            IDamageable damageable = other.GetComponent<IDamageable>();
+
+            if (damageable != null)
+            {
+                damageable.TakeDamage();
             }
         }
     }

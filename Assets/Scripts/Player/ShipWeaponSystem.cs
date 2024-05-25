@@ -12,17 +12,19 @@ public class ShipWeaponSystem : MonoBehaviour
 
     void Start()
     {
-        shootTimer.OnStart += ShootTimer_OnStart;
-        shootTimer.OnEnd += ShootTimer_OnEnd;
-
         InputManager.Instance.Actions.Shoot.performed += Shoot_performed;
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButton(0) && UIManager.Instance.isInGame)
+        {
+            Shoot();
+        }
     }
 
     private void OnDestroy()
     {
-        shootTimer.OnStart -= ShootTimer_OnStart;
-        shootTimer.OnEnd -= ShootTimer_OnEnd;
-
         InputManager.Instance.Actions.Shoot.performed -= Shoot_performed;
     }
 
@@ -47,22 +49,11 @@ public class ShipWeaponSystem : MonoBehaviour
         }
     }
 
-
     private void Shoot_performed(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
         if (!shootTimer.RunTimer)
         {
             Shoot();
         }
-    }
-
-    private void ShootTimer_OnEnd()
-    {
-
-    }
-
-    private void ShootTimer_OnStart()
-    {
-
     }
 }

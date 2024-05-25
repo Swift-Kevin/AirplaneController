@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class PlayerVisual : MonoBehaviour
 {
+    [SerializeField] private CameraShaker shaker;
+
+    [Seperator]
     [SerializeField] private GameObject particleBack;
     [SerializeField] private GameObject particleFrontLeft;
     [SerializeField] private GameObject particleFrontRight;
@@ -44,6 +47,7 @@ public class PlayerVisual : MonoBehaviour
 
     public void TurnOnBack()
     {
+        shaker.TurnOnShaker();
         particleBack.SetActive(true);
     }
 

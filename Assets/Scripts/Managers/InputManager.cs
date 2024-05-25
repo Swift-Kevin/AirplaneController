@@ -29,7 +29,6 @@ public class InputManager : MonoBehaviour
         if (UIManager.Instance.isInGame)
         {
             UIManager.Instance.TogglePauseMenu();
-            Debug.Log("toggled");
         }
     }
 }

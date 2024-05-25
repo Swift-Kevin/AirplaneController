@@ -2,6 +2,13 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    [SerializeField] private float waitToDestroyTime = 3f;
+
+    private void Start()
+    {
+        Destroy(gameObject, waitToDestroyTime);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
@@ -10,7 +17,7 @@ public class Bullet : MonoBehaviour
 
             if (damageable != null)
             {
-                damageable.TakeDamage(0);
+                damageable.TakeDamage();
             }
         }
     }

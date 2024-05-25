@@ -9,7 +9,7 @@ public class PlayerCamera : MonoBehaviour
 
     Vector2 inp;
     float inpZ => InputManager.Instance.ZRoll;
-    
+
     // pitch = x axis (inp.y)
     // yaw = y axis (inp.x)
     // roll = z axis (inpZ)
@@ -18,25 +18,28 @@ public class PlayerCamera : MonoBehaviour
     Vector3 values;
     void Update()
     {
-        inp = InputManager.Instance.LookVec;
-        
-        Quaternion pitchDelta = Quaternion.AngleAxis(-inp.y * camSens * Time.deltaTime, Vector3.right);
-        Quaternion yawDelta = Quaternion.AngleAxis(inp.x * camSens * Time.deltaTime, Vector3.up);
-        Quaternion rollDelta = Quaternion.AngleAxis(inpZ * camSens * Time.deltaTime, Vector3.forward);
+        if (UIManager.Instance.isInGame)
+        {
+            inp = InputManager.Instance.LookVec;
 
-        var rotDelta = pitchDelta * yawDelta * rollDelta;
+            Quaternion pitchDelta = Quaternion.AngleAxis(-inp.y * camSens * Time.deltaTime, Vector3.right);
+            Quaternion yawDelta = Quaternion.AngleAxis(inp.x * camSens * Time.deltaTime, Vector3.up);
+            Quaternion rollDelta = Quaternion.AngleAxis(inpZ * camSens * Time.deltaTime, Vector3.forward);
 
-        transform.rotation *= rotDelta;
+            var rotDelta = pitchDelta * yawDelta * rollDelta;
+
+            transform.rotation *= rotDelta;
+        }
     }
 
     private void OnDrawGizmos()
     {
         Debug.DrawRay(transform.position, transform.up * 2, Color.green);
         Debug.DrawRay(transform.position, Vector3.up * 2, Color.magenta);
-        
+
         Debug.DrawRay(transform.position, transform.forward * 2, Color.blue);
         Debug.DrawRay(transform.position, Vector3.forward * 2, Color.cyan);
-        
+
         Debug.DrawRay(transform.position, transform.right * 2, Color.red);
         Debug.DrawRay(transform.position, Vector3.right * 2, Color.yellow);
     }
